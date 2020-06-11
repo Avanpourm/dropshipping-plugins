@@ -18,8 +18,14 @@
      ></el-input>
       </el-form-item>
       <el-form-item>
-    <el-button size="small" type="primary" @click="getProductsList">商品查询</el-button>
-    <el-button size="small" @click="pushProductsList" v-loading="publishLoading">推送选中的所有商品</el-button>
+    <el-button size="small" type="primary" @click="getProductsList(1)">商品查询</el-button>
+    <el-popconfirm
+      @onConfirm="pushProductsList"
+      title="确定要推送这些商品吗？？"
+    >
+      <el-button slot="reference" size="small" :loading="publishLoading">推送选中的所有商品</el-button>
+    </el-popconfirm>
+    
     <span v-show="pushNumberShow">推送成功数量:{{pushNumber}}</span>
       </el-form-item>
   </el-form>
@@ -40,6 +46,13 @@
     </el-card>
   </el-col>
 </el-row>
+<el-pagination
+    @current-change="handleCurrentChange"
+    :current-page.sync="currentPage"
+    :page-size="100"
+    layout="prev, pager, next, jumper"
+    :total="100000">
+  </el-pagination>
   </div>
   
   </div>
@@ -53,29 +66,46 @@ export default {
       productList: [],
       api_key: this.$cookies.get('am-api-key'),
       input: '',
+      currentPage: 1,
       currentDate: new Date(),
       pushNumber: 0,
       pushNumberShow:false,
       publishLoading: false,
+      organizationMap: {
+        "landon-test-01": "9bba1ea4d5a144049772bef6b7a1841a",
+        "dropshipping-release-incy": "86cf3a92b2c04d849a6056e7cd82e043",
+      },
       appData: {
         app: {
-          key: "landon-test-01",
+          key: "dropshipping-release-incy",
           name: "aftership",
           platform: "shopify"
         },
         organization: {
-          id: "9bba1ea4d5a144049772bef6b7a1841a"
+          id: ""
         }
       },
     }
   },
   created: function () {
       const self = this;
+
       // self.setApiKey()
       // self.getProductsList();
 		},
   methods: {
-    getProductsList(){
+    initOrganization(){
+      this.appData.organization.id = this.organizationMap[this.appData.app.key]
+    },
+    
+    handleCurrentChange(val) {
+      console.log(val);
+      this.currentPage = val;
+      this.getProductsList(this.currentPage)
+        // console.log(`当前页: ${val}`);
+        // getProductsList(val)
+    },
+    getProductsList(page =1 ){
       const self = this;
       
       //api-key处理
@@ -91,17 +121,27 @@ export default {
         queryStr = data.join(',')
       }
 
-      let params = {limit:50}
+      let params = {page: page, limit:50}
       params.external_vendor_product_ids = queryStr
 
 			self.$axios.get(process.env.VUE_APP_API_URL_SUPPLIER + '/suppliers/v1/products',{params:params,  headers:headers}).then((response) => {
-        console.log(response.data.data.products)
-          self.productList = response.data.data.products;
+        //修复精度问题。
+        let products = response.data.data.products;
+        for(let product of products){
+          for(let variant of product.variants){
+            variant.price.amount = _.round(variant.price.amount, 2)
+          }
+        }
+
+        self.productList = products;
+          
       })
 
     },
     pushProductsList(){
       const self = this;
+
+      self.initOrganization()
 
       self.publishLoading = true;
       self.pushNumberShow = true;
@@ -199,7 +239,7 @@ export default {
 
       for(let variant of product.variants){
         const variantShippingPrice = shippingPriceMap[variant.universal_id]
-        variant.price.amount = _.add(variant.price.amount, variantShippingPrice.prices[1].amount);
+        variant.price.amount = _.round(_.add(variant.price.amount, variantShippingPrice.prices[1].amount), 2)
       }
       return product
     }
