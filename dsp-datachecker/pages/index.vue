@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="index-container">
     <div>
       <logo />
       <h1 class="title">
@@ -8,11 +8,11 @@
       <h2 class="subtitle">
       </h2>
       <div class="links">
-        <Button type="primary" target="_blank" to="orders">
-          Documentation
+        <Button type="primary" to="orders">
+          Orders
         </Button>
-        <Button target="_blank" to="https://github.com/nuxt/nuxt.js">
-          GitHub
+        <Button target="_blank" to="">
+          Products
         </Button>
         <Button target="_blank" to="https://www.iviewui.com/">
           iView
@@ -31,8 +31,8 @@ export default {
 }
 </script>
 
-<style>
-.container {
+<style scoped>
+.index-container {
   margin: 0 auto;
   min-height: 100vh;
   display: flex;
