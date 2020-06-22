@@ -2,7 +2,7 @@
   <div class="container">
     <div style="padding:16px;">
       <h1 class="title">
-        dsp-datachecker
+        dsp-datachecker - Products
       </h1>
     </div>
     <div style="padding:16px; width: 100% !important;
@@ -11,7 +11,8 @@
       <Input v-model="reqData.app_key" placeholder="app_key" style="width: 180px" />
       <Input v-model="reqData.app_platform" placeholder="app platform" style="width: 150px" />
       <Input v-model="reqData.organization_id" placeholder="organization id" style="width: 240px" />
-      <Input search enter-button v-model="reqData.order_numbers" style="width: 220px" placeholder="订单Id"  @on-search="searchStart"/>
+      <Input search enter-button v-model="reqData.external_vendor_product_ids" style="width: 220px" placeholder="shopify 商品id"  @on-search="searchStart"/>
+      <!-- <Input search enter-button v-model="reqData.order_numbers" style="width: 220px" placeholder="vendor 商品id"  @on-search="searchStart"/> -->
     </div>
     <div style="display: flex;"> 
       <div style="padding: 6px;background: #f8f8f9;">
@@ -56,7 +57,7 @@ export default {
       vendorList:{},
       am_api_key: "",
       reqData:{
-        order_numbers: "",
+        external_vendor_product_ids: "",
         app_key: "dropshipping-release-incy",
         app_platform: "shopify",
         organization_id: "86cf3a92b2c04d849a6056e7cd82e043",
@@ -79,69 +80,52 @@ export default {
       if(self.am_api_key){
         self.$cookies.set('am-api-key', self.am_api_key)
       }
-    
-      let business_order_id = await self.getDropshippingList();
-      let supplier_order_id = await self.getSuppliersList(business_order_id);
-      self.getVendorList(supplier_order_id);
+
+      let universal_product_id = await self.getSuppliersList();
+      await self.getDropshippingList(universal_id);
+
+      // self.getVendorList(supplier_order_id);
     },
-    async getDropshippingList() {
+    async getDropshippingList(universal_product_id) {
       const self = this
       let req = {
         app_key: self.reqData.app_key,
         app_platform: self.reqData.app_platform,
         organization_id: self.reqData.organization_id,
       }
-      if(self.reqData.order_numbers){
-        req.order_numbers = self.reqData.order_numbers;
+      if(universal_product_id){
+        // req.universal_product_ids = universal_product_id
       }
 
-      const res = await this.$axios.$get('/dropshipping/v1/orders', {
+      const res = await this.$axios.$get('/dropshipping/v1/products', {
         params: req, 
         headers: {"am-api-key": self.am_api_key},
       })
-      self.dropshippingList = res.data.orders
-      if(!res.data.orders[0]){
+      self.dropshippingList = res.data.products
+      if(self.dropshippingList.length == 0){
         return ''
       }
-      return res.data.orders[0].id
+      // return self.dropshippingList[0].id
     },
-    async getSuppliersList(business_order_id) {
+    async getSuppliersList() {
       const self = this
 
-      if(!business_order_id){
-         self.supplierList = {}
-        return ''
+      let params = {}
+      if(self.reqData.external_vendor_product_ids){
+        params.external_vendor_product_ids = self.reqData.external_vendor_product_ids
       }
 
-      const res = await this.$axios.$get('/suppliers/v1/orders',{
-        params: {
-          business_order_ids: business_order_id,
-        }, 
+      const res = await this.$axios.$get('/suppliers/v1/products',{
+        params: params, 
         headers: {"am-api-key": self.am_api_key},
       })
 
-      if(!res.data.orders[0]){
-        self.supplierList = {}
+      if(!res.data.products){
+        self.supplierList = []
         return ''
       }
-      self.supplierList = res.data.orders[0]
-      
-      return res.data.orders[0].id
-    },
-    async getVendorList(supplier_order_id) {
-      const self = this
-      if(!supplier_order_id){
-        self.vendorList = {}
-        return ''
-      }
-
-      const res = await this.$axios.$get('/suppliers/v1/vendors-orders',{
-        params: {
-          supplier_order_id: supplier_order_id
-        }, 
-        headers: {"am-api-key": self.am_api_key},
-      })
-      self.vendorList = res.data.orders
+      self.supplierList = res.data.products
+      return self.supplierList[0].universal_product_id
     }
   }
 }

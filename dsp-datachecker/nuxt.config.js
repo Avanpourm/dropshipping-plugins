@@ -45,14 +45,17 @@ export default {
     "cookie-universal-nuxt"
   ],
   proxy:[
-    'http://localhost:8080/suppliers',
-    'http://localhost:8079/dropshipping',
+    // 'http://localhost:8080/suppliers',
+    // 'http://localhost:8079/dropshipping',
 
-    // 'https://testing-incy-platform.automizelyapi.io/suppliers',
-    // 'https://testing-incy-product.automizelyapi.io/dropshipping',
+    'https://testing-incy-platform.automizelyapi.io/suppliers',
+    'https://testing-incy-product.automizelyapi.io/dropshipping',
 
     // 'https://release-incy-platform.automizelyapi.io/suppliers',
     // 'https://release-incy-product.automizelyapi.io/dropshipping',
+    
+    // 'https://platform.automizelyapi.io/suppliers',
+    // 'https://product.automizelyapi.io/dropshipping',
   ],
   /*
   ** Build configuration
