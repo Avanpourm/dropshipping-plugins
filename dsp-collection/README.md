@@ -25,6 +25,10 @@ If you want to build a plugins in test environment, run:
 ```
 npm run test
 ```
+If you want to build a plugins in release environment, run:
+```
+npm run release
+```
 1. Then you will get ``` dist ``` file in the same directory
 
 2. Now you can View ``` chrome —— more tools —— extension  ``` to open ``` Develop mode ```
@@ -38,8 +42,8 @@ npm run build
 ```
 
 ## How to install as Chrome plugins 
-![UTOOLS1591665576100.png](http://yanxuan.nosdn.127.net/22558b53d04d6285d588e5b93cef1cde.png)
+![UTOOLS1591665576100.png](./readme-statics/22558b53d04d6285d588e5b93cef1cde.png)
 
-![UTOOLS1591665644950.png](http://yanxuan.nosdn.127.net/a2e554c01adc6a9565bb85e0eb59ae23.png)
+![UTOOLS1591665644950.png](./readme-statics/a2e554c01adc6a9565bb85e0eb59ae23.png)
 
-![UTOOLS1591665690064.png](http://yanxuan.nosdn.127.net/3a1fcb5a8d780aa2fd740aa1f1d2fdc3.png)
+![UTOOLS1591665690064.png](./readme-statics/3a1fcb5a8d780aa2fd740aa1f1d2fdc3.png)

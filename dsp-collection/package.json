@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "test": "NODE_ENV=test && rimraf dist && node build/build.js --config build/webpack.test.conf.js",
+    "release": "NODE_ENV=release && rimraf dist && node build/build.js --config build/webpack.release.conf.js",
     "start": "npm run dev",
     "build": "NODE_ENV=production && rimraf dist && node build/build.js"
   },
@@ -16,7 +17,7 @@
     "axois": "0.0.1-security",
     "element-ui": "^2.4.6",
     "jquery": "^3.5.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "peer": "^0.5.3",
     "qs": "^6.9.4",
     "vue": "^2.5.2",
@@ -57,7 +58,7 @@
     "vue-template-compiler": "^2.5.2",
     "webpack": "^3.6.0",
     "webpack-bundle-analyzer": "^3.3.2",
-    "webpack-dev-server": "^2.11.5",
+    "webpack-dev-server": "^3.1.11",
     "webpack-merge": "^4.1.0"
   },
   "engines": {
