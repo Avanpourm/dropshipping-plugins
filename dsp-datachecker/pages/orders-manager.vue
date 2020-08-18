@@ -190,6 +190,10 @@ export default {
           product_url: "",
           platform_url: "",
         },
+        testing:{
+          product_url: "https://testing-incy-platform.automizelyapi.io",
+          platform_url: "https://testing-incy-product.automizelyapi.io",
+        },
         release: {
           product_url: "https://release-incy-platform.automizelyapi.io",
           platform_url: "https://release-incy-product.automizelyapi.io",
@@ -239,14 +243,22 @@ export default {
       if(self.reqData.order_numbers){
         req.order_numbers = self.reqData.order_numbers;
       }
+      let res;
+      try {
+        res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].platform_url+ '/dropshipping/v1/orders', {
+          params: req,
+          headers: {
+            "am-api-key": self.am_api_key,
+            "am-organization-id": self.reqData.organization_id
+          },
+        })
+      }catch (e){
+        alert(e.message)
+      }
 
-      const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].platform_url+ '/dropshipping/v1/orders', {
-        params: req,
-        headers: {
-          "am-api-key": self.am_api_key,
-          "am-organization-id": self.reqData.organization_id
-        },
-      })
+      if(res.status){
+
+      }
 
       if(!res.data.orders){
         return ''
