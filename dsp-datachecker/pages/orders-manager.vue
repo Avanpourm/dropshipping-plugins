@@ -198,6 +198,10 @@ export default {
           product_url: "https://release-incy-platform.automizelyapi.io",
           platform_url: "https://release-incy-product.automizelyapi.io",
         },
+        stage:{
+          product_url: "https://staging-platform.automizelyapi.com",
+          platform_url: "https://staging-product.automizelyapi.com",
+        },
         production: {
           product_url: "https://platform.automizelyapi.com",
           platform_url: "https://product.automizelyapi.com",

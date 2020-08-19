@@ -21,9 +21,18 @@ class Services {
     async run() {
         //  SELECT app_key,organization_id FROM orders GROUP BY app_key,organization_id LIMIT 100
         //
+        // let appInfoMap = [
+        //     {app_key:"dropshipping-production",org_id:"018a1759cc7a4bbbba6395e9ee942e22"},
+        //     {app_key:"automizely-store",org_id:"86cf3a92b2c04d849a6056e7cd82e043"},
+        //     {app_key:"automizely-store",org_id:"b82f5a20ae024f5f82f2a90e8a54bc35"},
+        // ];
+
+        // testing环境
         let appInfoMap = [
             {app_key:"landon-test-01",org_id:"0f456bfa2c394c94999cb7a6c465c1e6"},
             {app_key:"miaoxiaomixiao",org_id:"55660e6b98304423ae47ce8ef2a63964"},
+            {app_key:"carp-test",org_id:"5536a6b96e6343f7aedcfa925576ef03"},
+            {app_key:"steamer-dev",org_id:"2e79b3584ab4426fb161afdc096a414b"},
             {app_key:"landon-test-01",org_id:"9bba1ea4d5a144049772bef6b7a1841a"},
             {app_key:"landon-test-05",org_id:"9bba1ea4d5a144049772bef6b7a1841a"},
             {app_key:"landon-test-07",org_id:"9bba1ea4d5a144049772bef6b7a1841a"},
