@@ -305,24 +305,62 @@ export default {
             continue;
           }
           for (let orderItem of vendor_order.items){
+            // let data = {
+            //   "Order ID": isFirst ? order.id : " ",
+            //   "Order Number": isFirst ? order.order_name : " ",
+            //   "Order Price": isFirst ? vendor_order.order_total.amount / 100  : " ",
+            //   "Order Price (cost)": isFirst ? vendor_order.order_total_cost.amount / 100 : " ",
+            //   "Shipping Price (cost)": vendor_order.shipping_total_cost.amount / 100,
+            //   "Order ID (vendor)": vendor_order.external_vendor_order_id,
+            //   "Item ID (Automizely)": orderItem.id || " " ,
+            //   "Item ID (Eprolo)": orderItem.external_vendor_item_id || " ",
+            //   "Item Sku (Automizely)": orderItem.sku || " ",
+            //   "Item Name (Eprolo)": orderItem.title || " ",
+            //   "Item price USD (cost)": orderItem.unit_price_cost.amount/100 || " ",
+            //   "Item qty": orderItem.quantity,
+            //   "Shipping method": order.trackings.length > 0 ? order.trackings[0].slug : "",
+            //   "Status": order.order_status,
+            //   "Fulfillment Status (dropshipping)": order.fulfillment_status,
+            //   "Financial Status (vendor)": vendor_order.financial_status,
+            //   "Created Time": order.created_at,
+            // }
+
             let data = {
-              "Order ID": isFirst ? order.id : " ",
-              "Order Number": isFirst ? order.order_name : " ",
-              "Order Price": isFirst ? vendor_order.order_total.amount / 100  : " ",
-              "Order Price (cost)": isFirst ? vendor_order.order_total_cost.amount / 100 : " ",
-              "Shipping Price (cost)": vendor_order.shipping_total_cost.amount / 100,
+              "Shopify Store Id": order.app.key,
+              "Org Id": order.organization.id,
+              "Date Time": order.created_at,
+              "Vendor": "Eprolo API",
+              "Automizely ID": isFirst ? order.id : " ",
+              "Order Number(Shopify)": isFirst ? order.order_name : " ",
+              "Order ID(Shopify)": isFirst ? order.external_ecommerce_order_id : " ",
               "Order ID (vendor)": vendor_order.external_vendor_order_id,
-              "Item ID (Automizely)": orderItem.id || " " ,
               "Item ID (Eprolo)": orderItem.external_vendor_item_id || " ",
-              "Item Sku (Automizely)": orderItem.sku || " ",
               "Item Name (Eprolo)": orderItem.title || " ",
               "Item price USD (cost)": orderItem.unit_price_cost.amount/100 || " ",
-              "Item qty": orderItem.quantity,
-              "Status": order.order_status,
-              "Fulfillment Status (dropshipping)": order.fulfillment_status,
-              "Financial Status (vendor)": vendor_order.financial_status,
-              "Created Time": order.created_at,
+              "Currency": orderItem.unit_price.currency,
+              // "Unit Price": orderItem.unit_price.amount / 100 || " ",
+              "QTY": orderItem.quantity,
+              "Shipping Fee": vendor_order.shipping_total_cost.amount / 100,
+              "To Country": "United States",
+              "To Method": order.trackings.length > 0 ? order.trackings[0].slug : "",
+              "Financial Status (Vendor)": vendor_order.financial_status,
+              "Payment ID": "-",
+              "Amount": isFirst ? vendor_order.order_total_cost.amount / 100 : " ",
+
+
+              // "Order Price": isFirst ? vendor_order.order_total.amount / 100  : " ",
+              // "Order Price (cost)": isFirst ? vendor_order.order_total_cost.amount / 100 : " ",
+              // "Shipping Price (cost)": vendor_order.shipping_total_cost.amount / 100,
+              // "Item ID (Automizely)": orderItem.id || " " ,
+              // "Item Sku (Automizely)": orderItem.sku || " ",
+              //
+              // "Shipping method": order.trackings.length > 0 ? order.trackings[0].slug : "",
+              // "Status": order.order_status,
+              // "Fulfillment Status (dropshipping)": order.fulfillment_status,
+              // "Financial Status (vendor)": vendor_order.financial_status,
+              // "Created Time": order.created_at,
             }
+
             isFirst = false
 
             exportData.push(data)
