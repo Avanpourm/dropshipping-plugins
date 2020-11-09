@@ -325,8 +325,11 @@ export default {
     },
     async patchTrackingInfo(vendor_order){
       const self = this
-      console.log(vendor_order);
-      return false
+
+      if (!confirm("是否确定信息无误，并进行回填tracking number动作吗？")) {
+        return false
+      }
+
       // 页面Loading
       self.request_loading = true
 
@@ -384,7 +387,7 @@ export default {
 
     },
     async toOrder(order){
-      if (!confirm("是否确定信息无误，并进行下单动作")) {
+      if (!confirm("是否确定信息无误，并进行下单动作吗？")) {
         return false
       }
 
