@@ -52,7 +52,7 @@
             <Collapse simple>
               <Panel name="1">
                 Supplier Orders Items (下单用)
-                <div slot="content">
+                <div slot="contente">
                   <div v-for="oitem in order.items">
                     <div class="order-item-introduce">
                       <Row type="flex">
@@ -184,7 +184,7 @@ export default {
       reqData: {
         dropshipping_order_ids: "",
       },
-      couriers: ["YunExpress", "4PX"],
+      couriers: ["yunexpress", "4px"],
       orderStatus: 'normal',
       orderStatusMap: [
         {name: "normal"},
@@ -349,7 +349,8 @@ export default {
       let trackingItems = []
       for (let i of vendor_order.items) {
         trackingItems.push({
-          id: i.supplier_order_item_id
+          // id: i.supplier_order_item_id
+          id: i.id
         })
       }
       if (trackingItems.length == 0) {
@@ -587,10 +588,12 @@ export default {
     async getSuppliersList() {
       const self = this
 
+      // TODO: 1688 下单功能，如果V2版本上线了，换成下面那个v2版本
       const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v1/orders', {
+      // const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v2/orders', {
         params: {
           page: 1,
-          limit: 4,
+          limit: 20,
           business_order_ids: self.reqData.dropshipping_order_ids,
         },
         headers: {
@@ -621,9 +624,7 @@ export default {
         return order
       }
       for (let item of order.items) {
-        // TODO: 1688 下单功能，如果V2版本上线了，换成下面那个v2版本
         const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v1/products', {
-        // const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v2/products', {
           params: {
             universal_product_ids: item.universal_product_id,
           },
@@ -691,7 +692,8 @@ export default {
           for (let item of order.items) {
             for (let tracking of order.trackings) {
               for (let trackingItem of tracking.items) {
-                if (trackingItem.id == item.supplier_order_item_id) {
+                // if (trackingItem.id == item.supplier_order_item_id) {
+                if (trackingItem.id == item.id) {
                   if (!item.tracking_numbers) {
                     item.tracking_numbers = []
                   }
