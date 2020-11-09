@@ -32,7 +32,7 @@
         <Input style="width: 220px" placeholder="App key"/>
       </div>
       <div style="display: inline-block;vertical-align: middle;">
-        <Input search enter-button v-model="reqData.order_numbers" style="width: 220px"
+        <Input search enter-button v-model="reqData.dropshipping_order_ids" style="width: 220px"
                placeholder="Dropshipping order Id" @on-search="searchStart"/>
       </div>
     </div>
@@ -68,7 +68,7 @@
                         </Col>
                       </Row>
                     </div>
-<!--                TODO: 1688 下单功能，如果V2版本上线了，需要注释回来    -->
+                    <!-- TODO: 1688 下单功能，如果V2版本上线了，需要注释回来    -->
                     <!--<div class="order-item-operate">
                       <div style="margin-bottom: 15px">
                         <RadioGroup type="button" v-model="oitem.provider.code">
@@ -182,7 +182,7 @@ export default {
       vendorList: {},
       am_api_key: "",
       reqData: {
-        order_numbers: "",
+        dropshipping_order_ids: "",
       },
       couriers: ["YunExpress", "4PX"],
       orderStatus: 'normal',
@@ -275,7 +275,7 @@ export default {
         // }
       ],
       orderList: [],
-      requestEnv: "dev",
+      requestEnv: "production",
       requestEnvMap: {
         dev: {
           product_url: "",
@@ -591,6 +591,7 @@ export default {
         params: {
           page: 1,
           limit: 4,
+          business_order_ids: self.reqData.dropshipping_order_ids,
         },
         headers: {
           "am-api-key": self.am_api_key,
@@ -620,7 +621,7 @@ export default {
         return order
       }
       for (let item of order.items) {
-        <!--                TODO: 1688 下单功能，如果V2版本上线了，换成下面那个v2版本    -->
+        // TODO: 1688 下单功能，如果V2版本上线了，换成下面那个v2版本
         const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v1/products', {
         // const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v2/products', {
           params: {
@@ -669,7 +670,7 @@ export default {
         return ''
       }
 
-      <!--                TODO: 1688 下单功能，如果V2版本上线了，换成下面那个v2版本    -->
+      // TODO: 1688 下单功能，如果V2版本上线了，换成下面那个v2版本  npm
       const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v1/vendors-orders', {
       // const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v2/vendors-orders', {
         params: {
