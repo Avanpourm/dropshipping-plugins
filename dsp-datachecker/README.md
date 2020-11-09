@@ -38,3 +38,11 @@ cd testing-incy
 # 用php启动访问静态文件
 php -S 127.0.0.1:10088 -t ./
 ```
+
+
+## How to install as Chrome plugins
+![B2NNTJ.png](https://s1.ax1x.com/2020/11/05/B2NNTJ.png)
+
+![B2Nak9.png](https://s1.ax1x.com/2020/11/05/B2Nak9.png)
+
+![B2U9nU.png](https://s1.ax1x.com/2020/11/05/B2U9nU.png)
