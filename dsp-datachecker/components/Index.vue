@@ -14,6 +14,9 @@
         <Button type="primary" to="orders-manager">
           Order manager
         </Button>
+        <Button type="primary" to="supplier-orders">
+          Supplier Order
+        </Button>
         <Button target="_blank" to="products">
           Products
         </Button>

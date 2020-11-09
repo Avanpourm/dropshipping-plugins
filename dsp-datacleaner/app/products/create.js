@@ -41,7 +41,7 @@ class Services {
         while(true){
             let productPromise = []
 
-            for (let i=1; i <5; i++){
+            for (let i=1; i <20; i++){
                 var titleRandom = faker.commerce.productName();
                 var externalNo = ("ab3" + faker.random.number()).toString() + (faker.random.number()).toString();
                 var externalVariantNo1 = ("ab3" + faker.random.number()).toString() + (faker.random.number()).toString();
