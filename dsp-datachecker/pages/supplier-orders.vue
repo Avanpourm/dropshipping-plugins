@@ -278,7 +278,7 @@ export default {
         // }
       ],
       orderList: [],
-      requestEnv: "dev",
+      requestEnv: "production",
       requestEnvMap: {
         dev: {
           product_url: "",
