@@ -33,7 +33,7 @@
       </div>
       <div style="display: inline-block;vertical-align: middle;">
         <Input search enter-button v-model="reqData.dropshipping_order_ids" style="width: 220px"
-               placeholder="Dropshipping order Id" @on-search="searchStart"/>
+               placeholder="Dropshipping order Id" @on-search="searchStart" :loading="search_loading" />
       </div>
     </div>
     <div style="display: flex;">
@@ -69,7 +69,7 @@
                       </Row>
                     </div>
                     <!-- TODO: 1688 下单功能，如果V2版本上线了，需要注释回来    -->
-                    <!--<div class="order-item-operate">
+                    <div class="order-item-operate">
                       <div style="margin-bottom: 15px">
                         <RadioGroup type="button" v-model="oitem.provider.code">
                           <Radio label="Eprolo" border></Radio>
@@ -88,7 +88,7 @@
                           </FormItem>
                         </Form>
                       </div>
-                    </div>-->
+                    </div>
                   </div>
                   <!-- 如果已经有数据了，就不下单了 -->
                   <div class="operate-button"  v-if="order.order_status === ''">
@@ -102,6 +102,9 @@
                 Fulfillment Center (回填单号用。)
                 <div slot="content">
                   <div v-for="vendor_order in order.vendor_orders">
+                    <div>
+                      Eprolo 订单状态：{{vendor_order.eprolo_status_label}} - 拦截状态：{{vendor_order.eprolo_status_exception_label}}
+                    </div>
                     <Table :columns="ordersItemsColumns" :data="vendor_order.items" style="margin-bottom: 10px">
                       <template slot-scope="{ row, index }" slot="tracking_numbers">
                         <p v-for="(tn) in row.tracking_numbers">- {{ tn }} </p>
@@ -275,7 +278,7 @@ export default {
         // }
       ],
       orderList: [],
-      requestEnv: "production",
+      requestEnv: "dev",
       requestEnvMap: {
         dev: {
           product_url: "",
@@ -303,6 +306,7 @@ export default {
       modal_loading: false,
       block_order_ids: [],
       request_loading: false,
+      search_loading: false,
     };
   },
   created: function () {
@@ -321,13 +325,14 @@ export default {
     },
     async searchStart() {
       const self = this;
+      self.search_loading = true
 
       if (self.am_api_key) {
         self.$cookies.set('am-api-key', self.am_api_key)
       }
 
       await self.getSuppliersList()
-
+      self.search_loading = false
     },
     async patchTrackingInfo(vendor_order) {
       const self = this
@@ -457,7 +462,6 @@ export default {
           self.$Message.error("下单修改商品失败，请联系管理员")
           return false;
         }
-
 
         // 调用 split 拆单
         const splitRes = await this.$axios.$post(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v2/orders/' + order.id + '/split', {}, {
@@ -589,11 +593,11 @@ export default {
       const self = this
 
       // TODO: 1688 下单功能，如果V2版本上线了，换成下面那个v2版本
-      const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v1/orders', {
-      // const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v2/orders', {
+      // const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v1/orders', {
+      const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v2/orders', {
         params: {
           page: 1,
-          limit: 20,
+          limit: 10,
           business_order_ids: self.reqData.dropshipping_order_ids,
         },
         headers: {
@@ -664,6 +668,65 @@ export default {
 
       return order
     },
+    async getEproloOrder(external_vendor_order_id) {
+      const self = this
+      let defaultOrder = {
+        status_label: "无",
+        status_exception_label: "正常",
+      }
+      if(!external_vendor_order_id){
+        return defaultOrder
+      }
+
+      const res = await this.$axios.post(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v1/tools', {
+        "path": "order_list.html?orderid=" + external_vendor_order_id,
+        "code": "eprolo"
+      },{
+        params: {
+        },
+        headers: {
+          "am-api-key": self.am_api_key,
+          "am-organization-id": self.reqData.organization_id
+        },
+      })
+      console.log(res);
+
+      if (!res.data)
+        return defaultOrder;
+      if (!res.data.data)
+        return defaultOrder;
+      if(!res.data.data.Body)
+        return defaultOrder;
+      if (!res.data.data.Body.data)
+        return defaultOrder;
+      if (!res.data.data.Body.data.list)
+        return defaultOrder;
+      if (res.data.data.Body.data.list.length == 0)
+        return defaultOrder;
+
+      let eproloOrder = res.data.data.Body.data.list[0]
+
+      let statusMap = {
+        0: "全部",
+        1: "未支付",
+        2: "已支付",
+        3: "已退款",
+        4: "采购中",
+        6: "已发货",
+        8: "订单取消 ",
+        7: "部分发货"
+      }
+      let statusException = {
+        1: "未拦截",
+        2: "已拦截"
+      }
+      console.log(eproloOrder.status);
+      console.log(eproloOrder.status_exception);
+      eproloOrder.status_label = statusMap[eproloOrder.status] || "无"
+      eproloOrder.status_exception_label =  statusException[eproloOrder.status_exception] || "正常"
+
+      return eproloOrder
+    },
     async getVendorList(supplier_order_id) {
       const self = this
       if (!supplier_order_id) {
@@ -672,8 +735,8 @@ export default {
       }
 
       // TODO: 1688 下单功能，如果V2版本上线了，换成下面那个v2版本  npm
-      const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v1/vendors-orders', {
-      // const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v2/vendors-orders', {
+      // const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v1/vendors-orders', {
+      const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v2/vendors-orders', {
         params: {
           supplier_order_id: supplier_order_id
         },
@@ -688,6 +751,18 @@ export default {
       // self.vendorList = res.data.orders
 
       for (let order of res.data.orders) {
+        // 读取 eprolo 信息
+
+        if(order.external_vendor_order_id){
+          const eproloOrders = await self.getEproloOrder(order.external_vendor_order_id);
+          order.eprolo_status_label = eproloOrders.status_label
+          order.eprolo_status_exception_label = eproloOrders.status_exception_label
+        }else{
+          order.eprolo_status_label = "无"
+          order.eprolo_status_exception_label = "无"
+        }
+
+        // 组装tracking
         if (order.trackings.length != 0) {
           for (let item of order.items) {
             for (let tracking of order.trackings) {

@@ -93,8 +93,8 @@ export default {
       requestEnv: "production",
       requestEnvMap: {
         dev:{
-          product_url: "http://localhost:8080",
-          platform_url: "http://localhost:8079",
+          product_url: "",
+          platform_url: "",
         },
         testing:{
           product_url: "https://testing-incy-platform.automizelyapi.io",
