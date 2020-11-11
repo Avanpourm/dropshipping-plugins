@@ -78,7 +78,7 @@
                       </div>
                       <div>
                         <Form ref="formInline" inline>
-                          <FormItem> qwe45uio[
+                          <FormItem>
                             <Input placeholder="Provider Product ID" v-model="oitem.provider.product_id">
                             </Input>
                           </FormItem>
@@ -91,7 +91,7 @@
                     </div>-->
                   </div>
                   <!-- 如果已经有数据了，就不下单了 -->
-                  <div class="operate-button"  v-if="order.order_status === ''">
+                  <div class="operate-button" >
                     <Button type="primary" @click="toOrder(order)">下单</Button>
                   </div>
                 </div>
