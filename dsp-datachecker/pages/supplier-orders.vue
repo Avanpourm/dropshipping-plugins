@@ -567,7 +567,7 @@ export default {
 
 
         //整理Buyer信息
-        order.buyer = `姓名: ${order.shipping_address.first_name} ${order.shipping_address.last_name}  |  电话：${order.shipping_address.phone.country_code}-${order.shipping_address.phone.number} | 地址: ${order.shipping_address.address_line_1}, ${order.shipping_address.city}, ${order.shipping_address.state} ${order.shipping_address.postal_code} | email: ${order.shipping_address.email}`
+        order.buyer = `姓名:${order.shipping_address.first_name} ${order.shipping_address.last_name}  |  电话:${order.shipping_address.phone.country_code}-${order.shipping_address.phone.number} | 地址:${order.shipping_address.address_line_1}, 地址2:${order.shipping_address.address_line_2}, 地址3:${order.shipping_address.address_line_3}, City: ${order.shipping_address.city}, State: ${order.shipping_address.state} ${order.shipping_address.postal_code} | email: ${order.shipping_address.email}`
 
         order.list_content = orderTemp
       }
