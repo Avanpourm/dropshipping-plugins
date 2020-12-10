@@ -30,9 +30,7 @@
       <Input v-model="reqData.organization_id" placeholder="organization id" style="width: 240px" />
       <div>
         <Input search enter-button v-model="reqData.order_numbers" style="width: 220px" placeholder="订单Id"  @on-search="searchStart"/>
-
       </div>
-
 
     </div>
     <div style="display: flex;">

@@ -52,7 +52,7 @@
             <Collapse simple>
               <Panel name="1">
                 Supplier Orders Items (下单用)
-                <div slot="contente">
+                <div slot="content">
                   <div v-for="oitem in order.items">
                     <div class="order-item-introduce">
                       <Row type="flex">
@@ -69,7 +69,7 @@
                       </Row>
                     </div>
                     <!-- TODO: 1688 下单功能，如果V2版本上线了，需要注释回来    -->
-                    <div class="order-item-operate">
+                    <!--<div class="order-item-operate">
                       <div style="margin-bottom: 15px">
                         <RadioGroup type="button" v-model="oitem.provider.code">
                           <Radio label="Eprolo" border></Radio>
@@ -78,7 +78,7 @@
                       </div>
                       <div>
                         <Form ref="formInline" inline>
-                          <FormItem> qwe45uio[
+                          <FormItem>
                             <Input placeholder="Provider Product ID" v-model="oitem.provider.product_id">
                             </Input>
                           </FormItem>
@@ -88,10 +88,10 @@
                           </FormItem>
                         </Form>
                       </div>
-                    </div>
+                    </div>-->
                   </div>
                   <!-- 如果已经有数据了，就不下单了 -->
-                  <div class="operate-button"  v-if="order.order_status === ''">
+                  <div class="operate-button" >
                     <Button type="primary" @click="toOrder(order)">下单</Button>
                   </div>
                 </div>
@@ -278,7 +278,7 @@ export default {
         // }
       ],
       orderList: [],
-      requestEnv: "dev",
+      requestEnv: "production",
       requestEnvMap: {
         dev: {
           product_url: "",
@@ -593,11 +593,11 @@ export default {
       const self = this
 
       // TODO: 1688 下单功能，如果V2版本上线了，换成下面那个v2版本
-      // const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v1/orders', {
-      const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v2/orders', {
+      const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v1/orders', {
+      // const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v2/orders', {
         params: {
           page: 1,
-          limit: 10,
+          limit: 3,
           business_order_ids: self.reqData.dropshipping_order_ids,
         },
         headers: {
@@ -735,8 +735,8 @@ export default {
       }
 
       // TODO: 1688 下单功能，如果V2版本上线了，换成下面那个v2版本  npm
-      // const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v1/vendors-orders', {
-      const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v2/vendors-orders', {
+      const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v1/vendors-orders', {
+      // const res = await this.$axios.$get(self.requestEnvMap[self.requestEnv].product_url + '/suppliers/v2/vendors-orders', {
         params: {
           supplier_order_id: supplier_order_id
         },
